@@ -2,9 +2,9 @@ organization := "org.in-cal"
 
 name := "incal-core"
 
-version := "0.0.5"
+version := "0.0.6"
 
-description := "Core library for InCal projects containing utility classes, repo interfaces, and shared/common models."
+description := "Core library for In-Cal projects containing utility classes, repo interfaces, and shared/common models."
 
 isSnapshot := false
 
