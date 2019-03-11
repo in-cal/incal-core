@@ -56,4 +56,8 @@ trait AsyncReadonlyRepo[+E, ID] {
     * @return Number of matching elements.
     */
   def count(criteria: Seq[Criterion[Any]] = Nil): Future[Int]
+
+  // default/dummy implementation of exists (get and check)... should be overridden if more intelligent check is available
+  def exists(id: ID): Future[Boolean] =
+    get(id).map(_.isDefined)
 }

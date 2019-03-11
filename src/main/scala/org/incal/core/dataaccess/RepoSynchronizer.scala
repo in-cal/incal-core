@@ -42,6 +42,9 @@ private class SyncReadonlyRepoAdapter[E, ID](
 
   protected def wait[T](future : Awaitable[T]): T =
     Await.result(future, timeout)
+
+  override def exists(id: ID) =
+    wait(asyncRepo.exists(id))
 }
 
 private class SyncRepoAdapter[E, ID](
