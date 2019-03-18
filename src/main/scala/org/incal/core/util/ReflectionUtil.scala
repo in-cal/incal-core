@@ -29,14 +29,6 @@ object ReflectionUtil {
     getCaseClassMemberAndTypeNames(runtimeType)
   }
 
-  private def getCaseClassMemberAndTypeNames(runType: ru.Type): Traversable[(String, String)] =
-    getCaseClassMemberNamesAndTypes(runType).map { case (name, ruType) =>
-      (name, ruType.typeSymbol.asClass.fullName)
-    }
-
-  def isCaseClass(runType: ru.Type): Boolean =
-    runType.members.exists( m => m.isMethod && m.asMethod.isCaseAccessor )
-
   def getCaseClassMemberNamesAndTypes(
     runType: ru.Type
   ): Traversable[(String, ru.Type)] =
@@ -44,12 +36,28 @@ object ReflectionUtil {
       case m: MethodSymbol if m.isCaseAccessor => (shortName(m), m.returnType)
     }
 
-  def getCaseClassMemberNamesAndTypesInOrder(
-    runType: ru.Type
-  ): Traversable[(String, ru.Type)] =
-    runType.decls.sorted.collect {
-      case m: MethodSymbol if m.isCaseAccessor => (shortName(m), m.returnType)
+  def getCaseClassMemberMethods[T: TypeTag]: Traversable[MethodSymbol] =
+    typeOf[T].members.collect {
+      case m: MethodSymbol if m.isCaseAccessor => m
     }
+
+  def getCaseClassMemberNamesAndValues[T: TypeTag : ClassTag](instance: T): Traversable[(String, Any)] = {
+    val instanceMirror = mirror.reflect(instance)
+    val members = getCaseClassMemberMethods[T]
+
+    members.map { member =>
+      val fieldMirror = instanceMirror.reflectField(member.asTerm)
+      (member.name.toString, fieldMirror.get)
+    }
+  }
+
+  private def getCaseClassMemberAndTypeNames(runType: ru.Type): Traversable[(String, String)] =
+    getCaseClassMemberNamesAndTypes(runType).map { case (name, ruType) =>
+      (name, ruType.typeSymbol.asClass.fullName)
+    }
+
+  def isCaseClass(runType: ru.Type): Boolean =
+    runType.members.exists( m => m.isMethod && m.asMethod.isCaseAccessor )
 
   def shortName(symbol: Symbol): String = {
     val paramFullName = symbol.fullName
@@ -276,4 +284,14 @@ private class DynamicConstructorImpl[E](
         constructor(newValues: _*).asInstanceOf[E]
       )
     }
+}
+
+case class Person(name: String, age: Int, birthPlace: Option[String])
+
+object Lala extends App {
+  val person = Person("Peter", 35, Some("Presov"))
+
+  val x = ReflectionUtil.getCaseClassMemberNamesAndValues(person)
+
+  println(x.mkString("\n"))
 }
