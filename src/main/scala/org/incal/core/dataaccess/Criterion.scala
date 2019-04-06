@@ -24,6 +24,9 @@ case class EqualsNullCriterion(fieldName: String) extends Criterion[Unit] {
 case class RegexEqualsCriterion(fieldName: String, value: String) extends Criterion[String] {
   override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
 }
+case class RegexNotEqualsCriterion(fieldName: String, value: String) extends Criterion[String] {
+  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
+}
 case class NotEqualsCriterion[T](fieldName: String, value: T) extends Criterion[T] {
   override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
 }
@@ -60,6 +63,7 @@ object Criterion {
     def #!@[T] = NotEqualsNullCriterion(fieldName)
 
     def #~(value: String) = RegexEqualsCriterion(fieldName, value)
+    def #!~(value: String) = RegexNotEqualsCriterion(fieldName, value)
 
     def #->[V](value: Seq[V]) = InCriterion(fieldName, value)
     def #!->[V](value: Seq[V]) = NotInCriterion(fieldName, value)
