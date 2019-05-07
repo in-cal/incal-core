@@ -16,7 +16,11 @@ import scala.reflect.runtime.{universe => ru}
   */
 object ReflectionUtil {
 
-  private val mirror = ru.runtimeMirror(getClass.getClassLoader)
+  private val defaultMirror = newMirror(getClass.getClassLoader)
+
+  def newMirror(cl: ClassLoader): Mirror = ru.runtimeMirror(cl)
+
+  def currentThreadClassLoader: ClassLoader = Thread.currentThread().getContextClassLoader()
 
   def getMethodNames[T](implicit tag: ClassTag[T]): Traversable[String] =
     tag.runtimeClass.getMethods.map(_.getName)
@@ -41,7 +45,10 @@ object ReflectionUtil {
       case m: MethodSymbol if m.isCaseAccessor => m
     }
 
-  def getCaseClassMemberNamesAndValues[T: TypeTag : ClassTag](instance: T): Traversable[(String, Any)] = {
+  def getCaseClassMemberNamesAndValues[T: TypeTag : ClassTag](
+    instance: T,
+    mirror: Mirror = defaultMirror
+  ): Traversable[(String, Any)] = {
     val instanceMirror = mirror.reflect(instance)
     val members = getCaseClassMemberMethods[T]
 
@@ -64,15 +71,24 @@ object ReflectionUtil {
     paramFullName.substring(paramFullName.lastIndexOf('.') + 1, paramFullName.length)
   }
 
-  def classMirror(classSymbol: ClassSymbol): ClassMirror =
+  def classMirror(
+    classSymbol: ClassSymbol,
+    mirror: Mirror = defaultMirror
+  ): ClassMirror =
     mirror.reflectClass(classSymbol)
 
-  def classNameToRuntimeType(name: String): ru.Type = {
+  def classNameToRuntimeType(
+    name: String,
+    mirror: Mirror = defaultMirror
+  ): ru.Type = {
     val sym = mirror.staticClass(name)
     sym.selfType
   }
 
-  def typeToClass(typ: ru.Type): Class[_] =
+  def typeToClass(
+    typ: ru.Type,
+    mirror: Mirror = defaultMirror
+  ): Class[_] =
     mirror.runtimeClass(typ.typeSymbol.asClass)
 
   def enumValueNames(typ: ru.Type): Traversable[String] =
@@ -83,7 +99,10 @@ object ReflectionUtil {
       }
     }
 
-  def enum(typ: ru.Type): Enumeration =
+  def enum(
+    typ: ru.Type,
+    mirror: Mirror = defaultMirror
+  ): Enumeration =
     typ match {
       case TypeRef(enumType, _, _) =>
         mirror.reflectModule(enumType.termSymbol.asModule).instance.asInstanceOf[Enumeration]
@@ -286,12 +305,11 @@ private class DynamicConstructorImpl[E](
     }
 }
 
-case class Person(name: String, age: Int, birthPlace: Option[String])
+object ReflectionTest extends App {
+  case class Person(name: String, age: Int, birthPlace: Option[String])
 
-object Lala extends App {
-  val person = Person("Peter", 35, Some("Presov"))
+  val person = Person("John Snow", 36, Some("Winterfell"))
 
-  val x = ReflectionUtil.getCaseClassMemberNamesAndValues(person)
-
-  println(x.mkString("\n"))
+  val members = ReflectionUtil.getCaseClassMemberNamesAndValues(person)
+  println(members.mkString("\n"))
 }
