@@ -109,9 +109,19 @@ private class DynamicConstructorImpl[E](
     try {
       val constructorValues = paramNameAndTypes.map { case (paramName, paramType) =>
         fieldNameValueMap.get(paramName).map { value =>
+          // TODO: move this to val (above)
+          val isOption = paramType <:< typeOf[Option[_]]
+          val innerType = if (isOption) paramType.typeArgs.head else paramType
           // convert the value if needed
-          typeValueConverters.find(_._1.=:=(paramType)).map { case (_, converter) =>
-            converter(value)
+          typeValueConverters.find { case (typ, _) => typ =:= innerType }.map { case (_, converter) =>
+            if (isOption) {
+              value match {
+                case None => None
+                case Some(x) => Some(converter(x))
+                case _ => Some(converter(value))
+              }
+            } else
+              converter(value)
           }.getOrElse(
             value
           )
