@@ -97,6 +97,14 @@ object ReflectionUtil {
   ): Class[_] =
     mirror.runtimeClass(typ.typeSymbol.asClass)
 
+  def staticInstance(
+    name: String,
+    mirror: Mirror = defaultMirror
+  ): Any = {
+    val module = mirror.staticModule(name)
+    mirror.reflectModule(module).instance
+  }
+
   def enumValueNames(typ: ru.Type): Traversable[String] =
     typ match {
       case TypeRef(enumType, _, _) => {

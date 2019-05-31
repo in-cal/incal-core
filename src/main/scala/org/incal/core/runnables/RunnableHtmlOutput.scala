@@ -4,11 +4,14 @@ trait RunnableHtmlOutput {
 
   val output = new StringBuilder
 
+  protected def addOutput(string: String): Unit =
+    output ++= string
+
   protected def addParagraph(string: String): Unit =
-    output ++= s"<p>$string</p>"
+    addOutput(s"<p>$string</p>")
 
   protected def addDiv(string: String): Unit =
-    output ++= s"<div>$string</div>"
+    addOutput( s"<div>$string</div>")
 
   protected def bold(string: String): String =
     s"<b>$string</b>"

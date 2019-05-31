@@ -2,7 +2,7 @@ package org.incal.core.runnables
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
-
+import scala.reflect.runtime.universe.TypeTag
 
 trait InputFutureRunnable[I] extends InputRunnable[I] {
 
@@ -12,3 +12,5 @@ trait InputFutureRunnable[I] extends InputRunnable[I] {
 
   override def run(input: I) = Await.result(runAsFuture(input), timeout)
 }
+
+abstract class InputFutureRunnableExt[I](implicit val typeTag: TypeTag[I]) extends InputFutureRunnable[I]
