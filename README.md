@@ -7,7 +7,7 @@ Core library of all the InCal projects containing utility classes, repo interfac
 All you need is **Scala 2.11**. To pull the library you have to add the following dependency to *build.sbt*
 
 ```
-"org.in-cal" %% "incal-core % "0.1.9"
+"org.in-cal" %% "incal-core" % "0.1.9"
 ```
 
 or to *pom.xml* (if you use maven)
