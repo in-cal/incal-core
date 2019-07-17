@@ -1,5 +1,6 @@
 package org.incal.core.dataaccess
 
+import akka.stream.Materializer
 import akka.stream.scaladsl.Source
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -42,7 +43,8 @@ trait AsyncReadonlyRepo[+E, ID] {
     sort: Seq[Sort] = Nil,
     projection: Traversable[String] = Nil,
     limit: Option[Int] = None,
-    skip: Option[Int] = None
+    skip: Option[Int] = None)(
+    implicit materializer: Materializer
   ): Future[Source[E, _]] = for {
     items <- find(criteria, sort, projection, limit, skip)
   } yield {
