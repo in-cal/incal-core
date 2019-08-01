@@ -37,7 +37,7 @@ scmInfo := Some(ScmInfo(url("https://github.com/in-cal/incal-core"), "scm:git@gi
 
 developers := List(Developer("bnd", "Peter Banda", "peter.banda@protonmail.com", url("https://peterbanda.net")))
 
-licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
+licenses += "Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 
 publishMavenStyle := true
 
