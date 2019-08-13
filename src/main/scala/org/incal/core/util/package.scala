@@ -1,5 +1,6 @@
 package org.incal.core
 
+import org.apache.commons.lang.StringUtils
 import java.io.{BufferedOutputStream, File, FileOutputStream}
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executors
@@ -108,6 +109,8 @@ package object util {
       } yield Traversable(i) ++ j
     }
 
+  // string functions
+
   def nonAlphanumericToUnderscore(string: String) =
     string.replaceAll("[^\\p{Alnum}]", "_")
 
@@ -119,6 +122,13 @@ package object util {
     c.update(0, Character.toLowerCase(c(0)))
     new String(c)
   }
+
+  def toHumanReadableCamel(s: String): String =
+    StringUtils
+      .splitByCharacterTypeCamelCase(s.replaceAll("[_|\\.]", " "))
+      .map(_.trim).filter(_.nonEmpty).map(
+        _.toLowerCase.capitalize
+      ).mkString(" ")
 
   // fs functions
 
