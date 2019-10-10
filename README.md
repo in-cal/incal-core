@@ -1,4 +1,4 @@
-# InCal Core [![version](https://img.shields.io/badge/version-0.2.2-green.svg)](https://in-cal.org) [![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+# InCal Core [![version](https://img.shields.io/badge/version-0.2.2-green.svg)](https://in-cal.org) [![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)](https://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.com/in-cal/incal-core.svg?branch=master)](https://travis-ci.com/in-cal/incal-core)
 
 Core library of all the InCal projects containing utility classes, repo interfaces, and shared/common models.
 
