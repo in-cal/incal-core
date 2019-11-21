@@ -17,7 +17,7 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.scala-lang" % "scala-reflect" % "2.11.12",
+  "org.scala-lang" % "scala-reflect" % scalaVersion.value,
   "commons-io" % "commons-io" % "2.6",
   "commons-lang" % "commons-lang" % "2.6",
   "com.typesafe.akka" %% "akka-stream" % "2.4.17"
