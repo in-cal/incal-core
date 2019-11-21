@@ -10,7 +10,7 @@ description := "Core library for In-Cal projects containing utility classes, rep
 
 isSnapshot := false
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.10"
 
 resolvers ++= Seq(
   Resolver.mavenLocal
