@@ -4,20 +4,20 @@ organization := "org.in-cal"
 
 name := "incal-core"
 
-version := "0.2.2"
+version := "0.2.3"
 
 description := "Core library for In-Cal projects containing utility classes, repo interfaces, and shared/common models."
 
 isSnapshot := false
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.11.12" // "2.12.10"
 
 resolvers ++= Seq(
   Resolver.mavenLocal
 )
 
 libraryDependencies ++= Seq(
-  "org.scala-lang" % "scala-reflect" % "2.11.12",
+  "org.scala-lang" % "scala-reflect" % scalaVersion.value,
   "commons-io" % "commons-io" % "2.6",
   "commons-lang" % "commons-lang" % "2.6",
   "com.typesafe.akka" %% "akka-stream" % "2.4.17"
@@ -30,8 +30,6 @@ licenseOverrides := {
 }
 
 // POM settings for Sonatype
-homepage := Some(url("https://in-cal.org"))
-
 publishMavenStyle := true
 
 scmInfo := Some(ScmInfo(url("https://github.com/in-cal/incal-core"), "scm:git@github.com:in-cal/incal-core.git"))
