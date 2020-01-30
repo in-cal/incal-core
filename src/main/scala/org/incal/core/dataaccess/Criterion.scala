@@ -1,17 +1,17 @@
 package org.incal.core.dataaccess
 
 /**
-  * Criterion to search by such as "equal", "in", "<", and ">".
+  * Criterion to search by, such as "equals", "in", "<", and ">".
   *
-  * @param T type of entity to compare the given field with
+  * @param T type of the value to compare a given field with
   *
-  * @author Peter Banda
+  * @author Peter Banda & Sascha Herzinger
   * @since 2018
   */
-sealed abstract class Criterion[+T] {
-  val fieldName: String
+sealed trait Criterion[+T] {
+  val fieldName: String                                   // TODO: would need to be changed to fieldNames
   val value: T
-  def copyWithFieldName(fieldName: String): Criterion[T]
+  def copyWithFieldName(fieldName: String): Criterion[T]  // TODO: change name and impl to copyWithFieldPrefix(prefix: String) or remove completely and implement with casing where needed (used only by Mongo)
 }
 
 case class EqualsCriterion[T](fieldName: String, value: T) extends Criterion[T] {

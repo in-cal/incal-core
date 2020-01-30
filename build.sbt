@@ -4,7 +4,7 @@ organization := "org.in-cal"
 
 name := "incal-core"
 
-version := "0.2.3"
+version := "0.2.4-SNAPSHOT"
 
 description := "Core library for In-Cal projects containing utility classes, repo interfaces, and shared/common models."
 
@@ -34,7 +34,10 @@ publishMavenStyle := true
 
 scmInfo := Some(ScmInfo(url("https://github.com/in-cal/incal-core"), "scm:git@github.com:in-cal/incal-core.git"))
 
-developers := List(Developer("bnd", "Peter Banda", "peter.banda@protonmail.com", url("https://peterbanda.net")))
+developers := List(
+  Developer("bnd", "Peter Banda", "peter.banda@protonmail.com", url("https://peterbanda.net")),
+  Developer("sherzinger", "Sascha Herzinger", "sascha.herzinger@uni.lu", url("https://wwwfr.uni.lu/lcsb/people/sascha_herzinger"))
+)
 
 licenses += "Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 
