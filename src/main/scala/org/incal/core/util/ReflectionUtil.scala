@@ -16,6 +16,8 @@ object ReflectionUtil {
 
   private val defaultMirror = newMirror(getClass.getClassLoader)
 
+  def newCurrentThreadMirror: Mirror = newMirror(currentThreadClassLoader)
+
   def newMirror(cl: ClassLoader): Mirror = ru.runtimeMirror(cl)
 
   def currentThreadClassLoader: ClassLoader = Thread.currentThread().getContextClassLoader()
@@ -26,10 +28,10 @@ object ReflectionUtil {
   def getCaseClassMemberAndTypeNames[T: TypeTag]: Traversable[(String, String)] =
     getCaseClassMemberAndTypeNames(typeOf[T])
 
-  def getCaseClassMemberAndTypeNames(className: String): Traversable[(String, String)] = {
-    val runtimeType = classNameToRuntimeType(className)
-    getCaseClassMemberAndTypeNames(runtimeType)
-  }
+  def getCaseClassMemberAndTypeNames(runType: ru.Type): Traversable[(String, String)] =
+    getCaseClassMemberNamesAndTypes(runType).map { case (name, ruType) =>
+      (name, ruType.typeSymbol.asClass.fullName)
+    }
 
   def getCaseClassMemberNamesAndTypes(
     runType: ru.Type
@@ -63,11 +65,6 @@ object ReflectionUtil {
       (member.name.toString, fieldMirror.get)
     }
   }
-
-  private def getCaseClassMemberAndTypeNames(runType: ru.Type): Traversable[(String, String)] =
-    getCaseClassMemberNamesAndTypes(runType).map { case (name, ruType) =>
-      (name, ruType.typeSymbol.asClass.fullName)
-    }
 
   def isCaseClass(runType: ru.Type): Boolean =
     runType.members.exists( m => m.isMethod && m.asMethod.isCaseAccessor )
@@ -107,10 +104,9 @@ object ReflectionUtil {
 
   def enumValueNames(typ: ru.Type): Traversable[String] =
     typ match {
-      case TypeRef(enumType, _, _) => {
+      case TypeRef(enumType, _, _) =>
         val values = enumType.members.filter(sym => !sym.isMethod && sym.typeSignature.baseType(typ.typeSymbol) =:= typ)
         values.map(_.fullName.split('.').last)
-      }
     }
 
   def enum(
@@ -139,10 +135,10 @@ object ReflectionUtil {
         val instance = constructor.newInstance(boxedValues: _*).asInstanceOf[T]
         Some(instance)
       } catch {
-        case e: InstantiationException => None
-        case e: IllegalAccessException => None
-        case e: IllegalArgumentException => None
-        case e: InvocationTargetException => None
+        case _: InstantiationException => None
+        case _: IllegalAccessException => None
+        case _: IllegalArgumentException => None
+        case _: InvocationTargetException => None
       }
     }
 

@@ -8,7 +8,7 @@ version := "0.3.0-SNAPSHOT"
 
 description := "Core library for In-Cal projects containing utility classes, repo interfaces, and shared/common models."
 
-isSnapshot := false
+isSnapshot := true // false
 
 scalaVersion := "2.11.12" // "2.12.10"
 

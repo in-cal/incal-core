@@ -39,6 +39,8 @@ object DynamicConstructorFinder {
 
 private class DynamicConstructorFinderImpl[E](runtimeType: ru.Type) extends DynamicConstructorFinder[E] {
 
+  private val currentMirror = newCurrentThreadMirror// a new mirror using a current-thread class loader
+
   private val defaultTypeValues = Map[Type, Any](
     typeOf[Option[_]] -> None,
     typeOf[Boolean] -> false,
@@ -48,7 +50,7 @@ private class DynamicConstructorFinderImpl[E](runtimeType: ru.Type) extends Dyna
   )
 
   override val classSymbol = runtimeType.typeSymbol.asClass
-  private val cm = classMirror(classSymbol)
+  private val cm = classMirror(classSymbol, currentMirror)
 
   private val constructorsWithInfos = runtimeType.decl(ru.termNames.CONSTRUCTOR).asTerm.alternatives.map{ ctor =>
     val constructor = cm.reflectConstructor(ctor.asMethod)
@@ -103,7 +105,7 @@ private class DynamicConstructorImpl[E](
       paramNameDefaultValueMap.get(paramName).get
     } else
       None
-  }.toSeq
+  }
 
   def apply(fieldNameValueMap: Map[String, Any]): Option[E] =
     try {

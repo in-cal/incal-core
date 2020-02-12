@@ -5,10 +5,9 @@ package org.incal.core.dataaccess
   *
   * @param T type of the value to compare a given field with
   *
-  * @author Peter Banda & Sascha Herzinger
   * @since 2018
   */
-sealed trait Criterion[+T] {
+sealed abstract class Criterion[+T] {                     // had to roll back to abstract class... later switch to trait
   val fieldName: String                                   // TODO: would need to be changed to fieldNames
   val value: T
   def copyWithFieldName(fieldName: String): Criterion[T]  // TODO: change name and impl to copyWithFieldPrefix(prefix: String) or remove completely and implement with casing where needed (used only by Mongo)
