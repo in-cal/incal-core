@@ -1,56 +1,40 @@
 package org.incal.core.dataaccess
 
-/**
-  * Criterion to search by, such as "equals", "in", "<", and ">".
-  *
-  * @param T type of the value to compare a given field with
-  *
-  * @since 2018
-  */
-sealed abstract class Criterion[+T] {                     // had to roll back to abstract class... later switch to trait
-  val fieldName: String                                   // TODO: would need to be changed to fieldNames
+
+sealed trait CriteriaTree
+case class Node(operator: Operator, left: CriteriaTree, right: CriteriaTree) extends CriteriaTree
+sealed trait Criterion[+T] extends CriteriaTree {
+  val fieldName: String
   val value: T
-  def copyWithFieldName(fieldName: String): Criterion[T]  // TODO: change name and impl to copyWithFieldPrefix(prefix: String) or remove completely and implement with casing where needed (used only by Mongo)
 }
 
-case class EqualsCriterion[T](fieldName: String, value: T) extends Criterion[T] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
+case class EqualsCriterion[T](fieldName: String, value: T) extends Criterion[T]
+
 case class EqualsNullCriterion(fieldName: String) extends Criterion[Unit] {
-  override val value = ()
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
+  override val value: Unit = ()
 }
-case class RegexEqualsCriterion(fieldName: String, value: String) extends Criterion[String] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
-case class RegexNotEqualsCriterion(fieldName: String, value: String) extends Criterion[String] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
-case class NotEqualsCriterion[T](fieldName: String, value: T) extends Criterion[T] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
+
+case class RegexEqualsCriterion(fieldName: String, value: String) extends Criterion[String]
+
+case class RegexNotEqualsCriterion(fieldName: String, value: String) extends Criterion[String]
+
+case class NotEqualsCriterion[T](fieldName: String, value: T) extends Criterion[T]
+
 case class NotEqualsNullCriterion(fieldName: String) extends Criterion[Unit] {
-  override val value = ()
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
+  override val value: Unit = ()
 }
-case class InCriterion[V](fieldName: String, value: Seq[V]) extends Criterion[Seq[V]] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
-case class NotInCriterion[V](fieldName: String, value: Seq[V]) extends Criterion[Seq[V]] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
-case class GreaterCriterion[T](fieldName: String, value: T) extends Criterion[T] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
-case class GreaterEqualCriterion[T](fieldName: String, value: T) extends Criterion[T] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
-case class LessCriterion[T](fieldName: String, value: T) extends Criterion[T] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
-case class LessEqualCriterion[T](fieldName: String, value: T) extends Criterion[T] {
-  override def copyWithFieldName(fieldName: String) = copy(fieldName = fieldName)
-}
+
+case class InCriterion[V](fieldName: String, value: Seq[V]) extends Criterion[Seq[V]]
+
+case class NotInCriterion[V](fieldName: String, value: Seq[V]) extends Criterion[Seq[V]]
+
+case class GreaterCriterion[T](fieldName: String, value: T) extends Criterion[T]
+
+case class GreaterEqualCriterion[T](fieldName: String, value: T) extends Criterion[T]
+
+case class LessCriterion[T](fieldName: String, value: T) extends Criterion[T]
+
+case class LessEqualCriterion[T](fieldName: String, value: T) extends Criterion[T]
 
 object Criterion {
   implicit class Infix(val fieldName: String) extends AnyVal {
