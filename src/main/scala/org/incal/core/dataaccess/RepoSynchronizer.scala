@@ -29,15 +29,15 @@ private class SyncReadonlyRepoAdapter[E, ID](
     wait(asyncRepo.get(id))
 
   override def find(
-    criteria: Seq[Criterion[Any]] = Nil,
+    criteria: Option[CriteriaTree] = None,
     sort: Seq[Sort] = Nil,
-    projection : Traversable[String] = Nil,
+    projection: Traversable[String] = Nil,
     limit: Option[Int] = None,
     skip: Option[Int] = None
   ) =
     wait(asyncRepo.find(criteria, sort, projection, limit, skip))
 
-  override def count(criteria: Seq[Criterion[Any]]) =
+  override def count(criteria: Option[CriteriaTree]) =
     wait(asyncRepo.count(criteria))
 
   protected def wait[T](future : Awaitable[T]): T =
