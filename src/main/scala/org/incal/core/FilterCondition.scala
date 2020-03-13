@@ -2,14 +2,6 @@ package org.incal.core
 
 import org.incal.core.dataaccess._
 
-import scala.concurrent.Future
-
-/**
-  * Filter condition to be transformed to a repo criterion.
-  *
-  * @author Peter Banda
-  * @since 2018
-  */
 case class FilterCondition(
   fieldName: String,
   fieldLabel: Option[String],
@@ -36,13 +28,13 @@ object ConditionType extends Enumeration {
 object FilterCondition {
   import ConditionType._
 
-  def toCriteria(
+  private[core] def toCriteria(
     valueConverters: Map[String, String => Option[Any]],
     filterConditions: Seq[FilterCondition]
   ): Seq[Criterion[Any]] =
     filterConditions.flatMap(condition => toCriterion(valueConverters)(condition))
 
-  def toCriterion(
+  private[core] def toCriterion(
     valueConverters: Map[String, String => Option[Any]])(
     filterCondition: FilterCondition
   ): Option[Criterion[Any]] = {
