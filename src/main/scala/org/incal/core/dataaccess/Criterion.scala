@@ -1,8 +1,12 @@
 package org.incal.core.dataaccess
 
+import org.incal.core.dataaccess.Operator.Operator
+
 
 sealed trait CriteriaTree
+
 case class Node(operator: Operator, left: CriteriaTree, right: CriteriaTree) extends CriteriaTree
+
 sealed trait Criterion[+T] extends CriteriaTree {
   val fieldName: String
   val value: T
