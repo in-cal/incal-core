@@ -30,6 +30,8 @@ licenseOverrides := {
 }
 
 // POM settings for Sonatype
+homepage := Some(url("https://github.com/in-cal/incal-core"))
+
 publishMavenStyle := true
 
 scmInfo := Some(ScmInfo(url("https://github.com/in-cal/incal-core"), "scm:git@github.com:in-cal/incal-core.git"))
