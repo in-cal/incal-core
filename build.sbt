@@ -4,11 +4,11 @@ organization := "org.in-cal"
 
 name := "incal-core"
 
-version := "0.3.0-SNAPSHOT"
+version := "0.3.0"
 
 description := "Core library for In-Cal projects containing utility classes, repo interfaces, and shared/common models."
 
-isSnapshot := true // false
+isSnapshot := false
 
 scalaVersion := "2.11.12" // "2.12.10"
 
