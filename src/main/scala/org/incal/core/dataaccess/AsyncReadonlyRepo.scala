@@ -9,11 +9,9 @@ import scala.concurrent.Future
 /**
   * Generic asynchronous trait for a readonly repo.
   *
-  * @param E type of entity
-  * @param ID type of identity of entity (primary key)
+  * @tparam E type of entity
+  * @tparam ID type of identity of entity (primary key)
   *
-  * @author Peter Banda
-  * @since 2018
   */
 trait AsyncReadonlyRepo[+E, ID] {
 
@@ -22,7 +20,7 @@ trait AsyncReadonlyRepo[+E, ID] {
   /**
     * Finds all the elements matching criteria object.
     *
-    * @param criteria Filtering criteria. Use Nil for no filtering / return all.
+    * @param criteria Filtering criteria. Use None for no filtering / return all.
     * @param sort Sequence of asc/desc columns used for sorting. Leave at Nil for no sorting.
     * @param projection Defines which columns are supposed to be returned. Leave at Nil to return all.
     * @param limit Page limit. Use to define chunk sizes. Leave at None to use default.
@@ -30,7 +28,7 @@ trait AsyncReadonlyRepo[+E, ID] {
     * @return Future of the found items.
     */
   def find(
-    criteria: Seq[Criterion[Any]] = Nil,
+    criteria: Option[CriteriaTree] = None,
     sort: Seq[Sort] = Nil,
     projection: Traversable[String] = Nil,
     limit: Option[Int] = None,
@@ -39,7 +37,7 @@ trait AsyncReadonlyRepo[+E, ID] {
 
   // default/dummy implementation of streaming... if supported should be overridden
   def findAsStream(
-    criteria: Seq[Criterion[Any]] = Nil,
+    criteria: Option[CriteriaTree] = None,
     sort: Seq[Sort] = Nil,
     projection: Traversable[String] = Nil,
     limit: Option[Int] = None,
@@ -54,10 +52,10 @@ trait AsyncReadonlyRepo[+E, ID] {
   /**
     * Return the number of elements matching criteria.
     *
-    * @param criteria Filtering criteria (same as <code>find</code>). Use Nil for no filtering / return all.
+    * @param criteria Filtering criteria (same as <code>find</code>). Use None for no filtering / return all.
     * @return Number of matching elements.
     */
-  def count(criteria: Seq[Criterion[Any]] = Nil): Future[Int]
+  def count(criteria: Option[CriteriaTree] = None): Future[Int]
 
   // default/dummy implementation of exists (get and check)... should be overridden if more intelligent check is available
   def exists(id: ID): Future[Boolean] =

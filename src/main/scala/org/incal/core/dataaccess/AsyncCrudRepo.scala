@@ -6,11 +6,8 @@ import scala.concurrent.Future
 /**
   * Generic asynchronous trait for a repo allowing all read/write operations including delete and update.
   *
-  * @param E type of entity
-  * @param ID type of identity of entity (primary key)
-  *
-  * @author Peter Banda
-  * @since 2018
+  * @tparam E type of entity
+  * @tparam ID type of identity of entity (primary key)
   */
 trait AsyncCrudRepo[E, ID] extends AsyncRepo[E, ID] {
 
@@ -24,5 +21,5 @@ trait AsyncCrudRepo[E, ID] extends AsyncRepo[E, ID] {
   def delete(ids: Traversable[ID]): Future[Unit]=
     Future.sequence(ids.map(delete)).map(_ -> ())
 
-  def deleteAll: Future[Unit]
+  def deleteAll(): Future[Unit]
 }
